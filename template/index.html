@@ -1,0 +1,81 @@
+{% extends 'task_list.html' %}
+{% block content %}
+<div>
+  <div class="container pt-4">
+    <div class="row  p-0 mt-4">
+    <div class="col-lg-4 mx-auto shadow">
+      <div class="alert alert-info">
+        <h2>add new todo</h2>
+      </div>
+      <div class="p-4">
+        <form action="/add_todo/" method="POST">
+          {% csrf_token %}
+          {{form.as_p}}
+          <hr>
+          <input type="submit" value="ADD" class="btn btn-info">
+        </form>
+      </div>
+    </div>
+    <div class="col">
+      <div class="border">
+        {% if todos|length == 0 %}
+           <div class="p-4">
+            <br>
+            <br>
+            <br>
+            <div class="alert alert-info text-center">
+              <p style="font-size:30px">No Todos</p>
+  
+            </div>
+            <br>
+            <br>
+           </div>
+
+        {%else%}
+        <div><h1>The user is {{user}}</h1></div>
+        <div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>S.no</th>
+                <th>Task</th>
+                <th>status</th>
+                <th>Deadline</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+             
+              {% for todo in todos %}
+              <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{todo.task}}</td>
+                <td>{% if todo.status == 'True'%}
+                  ✅
+                  {%else%}
+                  🕒
+                  {%endif%}
+                </td>
+                <td>{{todo.deadline}}</td>
+                <td><a href="delete_todo/{{todo.id}}" title="delete">🗑️</a>
+                  {% if todo.status == 'False'%}
+                  <a href="change_todo/{{todo.id}}/True" title="mark completed">✅</a>
+                  {%else%}
+                  <a href="change_todo/{{todo.id}}/False" title="mark incomplete">🕒</a>
+                  {%endif%}
+                    <a href="todo_Edit/{{todo.id}}"><button>📝</button></a>
+                </td>
+              </tr>
+              {% endfor %}
+            
+            </tbody>
+          </table>
+        </div>
+        {%endif%}
+      </div>
+   </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}
